@@ -9,6 +9,7 @@ Markdown sources.
 
 import os
 import re
+import sys
 from argparse import ArgumentParser
 from pathlib import Path
 
@@ -28,6 +29,12 @@ def move_image(old_name: str, new_name: str) -> Path:
     new_name = new_name.replace(" ", "-")
     # Enforce .png extension.
     new_path = Path(ASSETS_DIR / new_name).with_suffix(".png")
+    # Disallow overwriting.
+    if new_path.exists():
+        sys.stderr.write(
+            f"{new_path.name} already exists. Pick a different name.\n"
+        )
+        sys.exit(1)
     return Path(old_name).rename(new_path)
 
 
