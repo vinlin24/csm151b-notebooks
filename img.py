@@ -19,8 +19,7 @@ parser = ArgumentParser(description=__doc__)
 parser.add_argument("old_name", metavar="NAME.png", help="image to move")
 parser.add_argument("new_name", metavar="NEW_NAME.png", help="new image name")
 
-SCRIPT_DIR = Path(__file__).parent
-ASSETS_DIR = SCRIPT_DIR / "assets"
+ASSETS_DIR = Path.cwd() / "assets"
 
 
 def move_image(old_name: str, new_name: str) -> Path:
@@ -66,7 +65,7 @@ def main() -> None:
     new_path = move_image(old_name, new_name)
     new_relative_path = get_new_relative_path(new_path)
 
-    for file in SCRIPT_DIR.iterdir():
+    for file in Path.cwd().iterdir():
         if file.suffix != ".md" or file.name.startswith("README"):
             continue
         update_references(file, old_name, new_relative_path)
