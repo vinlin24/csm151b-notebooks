@@ -23,7 +23,7 @@ workspace. For Markdown, that corresponds to headers, so you can use that to
 preview the outline and jump around.
 
 **Pro tip:** If you're viewing these source files on VS Code, you can use
-<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>O</kbd> to render the Markdown in a
+<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>V</kbd> to render the Markdown in a
 separate tab (or <kbd>Ctrl</kbd>+<kbd>K</kbd> <kbd>V</kbd> to open it to the
 side) and read that one.
 
