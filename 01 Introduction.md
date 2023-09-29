@@ -30,7 +30,7 @@ do we maintain compatibility?**
 
 ### Instruction Set Architectures
 
-:warning: **In this courses, we will focus on RISC-V ISA.**
+:warning: **In this course, we will focus on RISC-V ISA.**
 
 We define a *contract*, an **instruction set architecture (ISA)**. This **system
 software** sits between the software and the hardware in our model, like a
