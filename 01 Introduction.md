@@ -30,17 +30,21 @@ do we maintain compatibility?**
 
 ### Instruction Set Architectures
 
-:warning: **In this course, we will focus on RISC-V ISA.**
-
 We define a *contract*, an **instruction set architecture (ISA)**. This **system
 software** sits between the software and the hardware in our model, like a
 middleman.
 
 * You offer the software a well-defined set of instructions that they can play
-  around with. From the software's *perspective*, they see "storage locations"
-  (memory) and operations e.g. "add".
+  around with. From the software's *perspective*, they're offered some way to
+  change and maintain state through "storage locations" (memory) and operations
+  e.g. "add".
 * The hardware is then responsible for knowing how to execute those exact
   instructions and in what order.
+
+There are many possible implementations for a given ISA.
+
+:warning: **In this course, we will focus on RISC-V ISA.**
+
 
 **It allows hardware and software to change/evolve independently!**
 
