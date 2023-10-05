@@ -11,10 +11,10 @@ In our case:
 * **RISC (reduced instruction set computer)**: hardwired, pipelined.
 * **CISC (complex instruction set computer)**: microcoded.
 
-**RISC-V** is an *open-source* RISC-based ISA (royalty-free), mostly emaintained
+**RISC-V** is an *open-source* RISC-based ISA (royalty-free), mostly maintained
 by the open-source community.
 
-As the name implies, RISC is very simplified compared to RISC
+As the name implies, RISC is very simplified compared to CISC:
 
 * Instruction sizes are fixed e.g. all instructions are 32-bits long on a 32-bit
   architecture, as oppposed to variable instruction sizes in CISC.
