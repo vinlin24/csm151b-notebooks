@@ -18,7 +18,7 @@ As the name implies, RISC is very simplified compared to CISC:
 
 * Instruction sizes are fixed e.g. all instructions are 32-bits long on a 32-bit
   architecture, as oppposed to variable instruction sizes in CISC.
-* Operations are simple and one-by-one (just add and nothing else), as opposed
+* Operations are simple and one-by-one (e.g. just add and nothing else), as opposed
   to *packed* operations in CISC.
 
 RISC is more popular than CISC. Pretty much all widely-used ISAs (except x86 by
@@ -42,12 +42,12 @@ one-by-one and executes them sequentially until the program finishes.
 linear memory array. Instructions can be modified AS data.
 
 From the memory's point of view, there's no difference in if the bytes represent
-is an "instruction" or "data".
+an "instruction" or "data".
 
 The CPU then needs to know what the current instruction is so it know what to
 execute. It does this with a **program counter (PC)**.
 
-The sequential instruction processing (aka the **fecth-decode-execute** or
+The sequential instruction processing (aka the **fetch-decode-execute** or
 **fetch-execute** cycle):
 
 1. Program counter (PC) identifies current instruction.
@@ -72,7 +72,7 @@ COMMAND OPERAND1 OPERAND2 ...
 ```
 
 You can think of it like a function call and its arguments. A **command** is
-some **operation code (opcode)** representing a specific operation e.g. `add.`
+some **operation code (opcode)** representing a specific operation e.g. `add`.
 Operands on the other hand have [three forms](#instruction-operands).
 
 
@@ -300,7 +300,7 @@ ADDI x5, x1, 10
 
 Similarly, this is like: `x5 = x1 + 10`.
 
-Operations supported by the ALU include (and consider their `I` variants too):
+Operations supported by the ALU include:
 
 * Arithmetic (`ADD`, `SUB`, `ADDI`)
 * Logical (`OR`, `AND`, `XOR`, `ORI`, `ANDI`, `XORI`)
@@ -324,13 +324,15 @@ Y = SUM{1,6,8,9}
 Z = Y<<2 - Y>>2
 ```
 
+<!-- TODO: Is this correct? -->
+
 ```
 ADDI x1, x0, 1
 ADDI x1, x1, 6
 ADDI x1, x1, 8
 ADDI x1, x1, 9
-SLA x2, x1, 2
-SRA x3, x1, 2
+SLAI x2, x1, 2
+SRAI x3, x1, 2
 SUB x4, x2, x3
 ```
 
