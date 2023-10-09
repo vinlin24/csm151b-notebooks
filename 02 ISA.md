@@ -251,6 +251,10 @@ Similary for `store`:
 * `sh` ("store half") -- 16 bits
 
 You DON'T actually need to care about sign/sign extension when storing memory.
+This is because you're simply writing x bytes to x bytes (where x can be 1, 2,
+or 4). The reason sign/zero extension was needed for loading in the first place
+is because you're loading x bytes into a full-sized 4-byte register. If x < 4,
+then you'll have to extend the value to populate the whole register.
 
 
 ## Instruction Commands
