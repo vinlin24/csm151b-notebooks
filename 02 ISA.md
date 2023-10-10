@@ -263,7 +263,7 @@ Instructions can also be categorized into types:
 
 1. [Arithmetic/ALU](#arithmeticalu)
 2. [Memory](#memory-1)
-3. [Control-Flow](#control-flow)
+3. [Control-Flow](#control-flow-jumping-branching-linking)
 
 
 ### Arithmetic/ALU
@@ -368,7 +368,7 @@ sb rs2, offset(rs1)
 ```
 
 
-### Control-Flow
+### Control-Flow: Jumping, Branching, Linking
 
 ![](assets/control-commands.png)
 
@@ -392,3 +392,166 @@ There are "jump" and "branch" instructions.
 
 These instructions always use **PC-relative addressing** e.g. +0x45 instead of
 some exact address.
+
+
+**Lecture 3 | 2023-10-5 | Week 1 (Thursday) | [Slides](slides/L2-%20ISA.pdf)**
+
+* *Linking* is when we want to jump to another instruction but at some point
+  need to return, so we store the PC in some register.
+
+```
+main:
+  ...
+  ...
+  ...
+  call <foo> ; store PC+4 in some register e.g. x1
+  ...        ; so when we return from foo, we know to execute from here
+
+foo:
+  ...
+  ...
+  ...
+  ret ; restore PC from the contents of x1
+```
+
+Note that we use PC+4 (the *next* instruction) because we want to prepare to
+execute the instruction *after* whatever it is that we're jumping from. It's
+plus 4 because every instruction is a fixed 32-bit size, so the next instruction
+would be at the offset of +4 addressable bytes.
+
+![](assets/jump-commands.png)
+
+Notice for all instructions, there's a `pc + 4` involved somehow -- that
+corresponds to the *next* instruction. In the case of the "jump and link"
+instructions, that corresponds to the instruction to *return* to. In the case of
+the "branch if" instructions, it corresponds to the "else" case, where if the
+condition is not true, we simply move onto the next instruction instead of
+jumping to `label`.
+
+> the immediate encodes the target address as an offset from the current pc
+
+The label you see in the assembly instruction is the absolute address loaded
+into registers. How it's *calculated* is when the base + offset concept comes
+into play:
+
+$$\text{pc} + \text{imm} = \text{label}$$
+
+
+`JAL` vs `JALR`?
+
+* The former is direct: you use an immediate to jump.
+* The latter is indirect: you use the value of some register + some offset to
+  jump.
+* Also, you'll notice that for `JALR` it appears to be left shifted by 1 and
+  then the last bit is cleared -- this is because due to alignment, we always
+  want to jump to even addresses?
+
+
+### Pseudo Instructions
+
+Instructions that are not in the ISA but can be easily converted to one or two.
+These exist for sanity/convenience purposes.
+
+For example, `j label` = `jal x0, label`, but the latter is unnecessarily
+unintuitive, when you just want to jump. You can use the **pseudo instruction**
+`j` and the compiler will understand and convert it to a proper instruction(s).
+
+Another example is `li rd constant` ("load immediate"), which is equivalent to
+`addi rd, x0, constant`.
+
+`call` and `ret` themselves are pseudo-instructions! (see below)
+
+The pseudo instructions themselves are well-defined by compiler specifications:
+
+![](assets/pseudo-instructions.png)
+
+Pseudo instructions also exist for space concerns. An ISA cannot be arbitrarily
+large since every instruction has to be able to fit in fixed 32 bits, so you
+cannot have too many different instructions that all demand different opcodes.
+Pseudo instructions are like a layer of abstraction that work around this -- we
+let the *compiler* translate a larger set of instructions into a smaller one.
+
+
+### Calling Convention
+
+Some registers are reserved (by convention) for specific purposes, so
+callers/callees know to reference them for special values and not to overwrite
+them arbitrarily.
+
+![](assets/calling-conventions.png)
+
+"Symbolic names" are symbols that exist for convenience and will be translated
+into the correct value by the compiler.
+
+There are also rules involving caller/callee responsibility -- see "Saver"
+column.
+
+* The callee promises to leave some registers unchanged for the caller. If it
+  needs to be modified during the call, the callee should save the values onto
+  the stack such that it can recover them back into the registers before
+  returning, keeping the promise.
+* On the call, the return address has to be saved on the stack.
+* Before returning, the stack frame pointer has to be recovered.
+
+Call flow:
+
+1. The caller puts arguments onto the stack so the callee knows where to look
+   for them.
+2. The caller invokes the callee with `call`.
+3. The callee reserves registers for caller on the stack and the old base
+   pointer.
+4. The callee makes does its work, making room for local variables and executing
+   code.
+5. The callee puts the return value into the dedicated register.
+6. The callee restores the stack frame and reserved registers and returns.
+
+
+### Practice Problem 1
+
+Input: x10 = 5, x11 = 3
+Output: x10 = ?, x11 = ?
+
+```
+Label 1:
+    LI x20, 0               ; x20 = 0
+Label 2:
+    ADD x20, x20, x10       ; x20 += x10
+    ADDI x11, x11, -1       ; x11--
+    BGT x11, x0, label 2    ; x11 > 0 ? label 2
+    MV x10, x20             ; x10 = x20
+    RET
+```
+
+Answer: x10 = 15 and x11 = 0.
+
+This code is essentially looping until x11 is zero:
+
+```c
+int x20 = 0;
+int x10 = 5;
+int x11 = 3;
+for (; x11 > 0; x11--) {
+    x20 += x10;
+}
+// x11 reached 0, and 5 was added to x20 3 times for a final x10 = 15.
+x10 = x20;
+```
+
+
+### Practice Problem 2
+
+Write the assembly version of this code:
+
+```c
+int foo(int a, int b, int c) {
+    int d;      // (foo)
+    d = a;
+    if (b < d)  // (L1)
+        d = b;
+    if (c < d)  // (L2)
+        d = c;
+    return d;   // (L3)
+}
+```
+
+**TODO.**
