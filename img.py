@@ -51,7 +51,8 @@ def update_references(file: Path, old_name: str, new_path: str) -> None:
     pattern = f"!\\[(.*)\\]\\({old_name}\\)"
     replace = f"![\\g<1>]({new_path})"  # \g<num> to refer to groups.
     new_content = re.sub(pattern, replace, content)
-    file.write_text(new_content, encoding="utf-8")
+    # newline="\n" to write LF, not CRLF.
+    file.write_text(new_content, encoding="utf-8", newline="\n")
 
 
 def main() -> None:
