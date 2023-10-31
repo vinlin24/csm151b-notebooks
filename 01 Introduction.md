@@ -90,7 +90,7 @@ with smaller prices.
 
 ### Dennard's Scaling Law
 
-Moore's Law states that the *number*of transistors increases - this means the
+Moore's Law states that the *number* of transistors increases - this means the
 transistor's area is reduced by 50%, or every *dimension* by 0.7x.
 
 A transistor has some gap length associated with it, `L`. Reducing this channel
